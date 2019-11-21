@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <!--
+  * Please see the included README.md file for license terms and conditions.
+  -->
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="media_button_bar/css/media_button_bar.css">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="ionic/css/ionic.min.css">
+        <title>FARAONE</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+		<meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+		<meta http-equiv="pragma" content="no-cache" />
+
+        <style>
+			@-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
+            @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+            /*@-ms-viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }   @viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }*/
+			
+			.loading {
+			  background: transparent url('imagens/Preloader_2.gif') center no-repeat;
+			}
+			
+			.upperdiv{
+				position:absolute; 
+				z-index:5; 
+			}
+        </style>
+
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
+		
+        <script src="cordova.js" id="xdkJScordova_"></script>
+
+        <script src="js/app.js"></script>
+        <script src="js/init-app.js"></script>
+        <script src="xdk/init-dev.js"></script>
+        <script type="application/javascript" src="lib/jquery.min.js"></script>
+        <script type="application/javascript" src="marginal/marginal-position.js"></script>
+        <script type="application/javascript" src="ionic/js/ionic.bundle.js"></script>
+        <script type="application/javascript" src="js/index_init_services.js"></script>
+        <script type="application/javascript" src="js/index_user_scripts.js"></script>
+        <script type="application/javascript" src="xdk/ad/ionic_subpage.js"></script>
+		
+		<!-- CUSTOM -->		
+		<script type="text/javascript" src="custom/js/fabric.js"></script>
+		<script type="text/javascript" src="custom/js/tshirtEditor.js"></script>
+		<script type="text/javascript" src="js/fabric.curvedText.js"></script>		
+		<link rel="stylesheet" href="css/index_css.css">
+		<!-- CUSTOM -->	
+		
+		<!-- SALVADOR -->
+		<script src="custom/js/interact.min.js"></script>
+		<script type="text/javascript" src="js/interact.js"></script>
+		<!-- SALVADOR -->
+						
+		<!-- CANVAS REDIMENCIONA -->
+		<script type="text/javascript" src="js/resize.js"></script>
+		<!-- CANVAS REDIMENCIONA -->
+				
+		<!--TAMAMNHO DA PAGINA -->
+		<script type="text/javascript" src="js/pagesize.js"></script>
+		<!--TAMAMNHO DA PAGINA -->
+		
+		<!-- TROCA ORIENTAÇÃO -->
+		<script type="text/javascript" src="js/orientacao.js"></script>
+		<!-- TROCA ORIENTAÇÃO -->
+		
+		<!-- ENDEREÇO -->
+		<script type="text/javascript" src="js/endereco.js"></script>
+		<!-- ENDEREÇO -->
+		
+		<!-- CAMERA -->
+		<script type="text/javascript" src="js/camera.js"></script>
+		<!-- CAMERA -->
+				
+		<script>																										
+			function fecha_aviso(){
+			   $('#aviso').hide();
+			};	
+			function fecha_aviso_foto(){
+			   $('#aviso_foto').hide();
+			};		
+		</script>
+				
+		<!-- PAGSEGURO 
+		<script type="text/javascript" src="https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js"></script>
+		<script type="text/javascript" src="js/pagseguro.js"></script>-->
+		<script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
+			   								
+    </head>
+
+    <body>
+		
+		<script type="text/javascript">
+			var cont = 0;
+			document.addEventListener('deviceready', function () {		
+			
+				var notificationOpenedCallback = function(jsonData) {
+					console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+				};
+
+				window.plugins.OneSignal
+				.startInit("4e603d73-9964-4f41-a99e-c0fb69b4ee49")
+				.handleNotificationOpened(notificationOpenedCallback)
+				.endInit();
+				
+				window.plugins.OneSignal.getIds(function(ids) {
+					$('#token_id').val(ids.userId);
+				});
+				
+			}, false);
+		
+		</script>
+		
+		<script type="text/javascript">
+			var cont = 0;
+			
+			document.addEventListener('deviceready', function() {
+			
+					$("#app-status-ul").append('<li>deviceready event received</li>');
+					$(document).on("click", ".btn2", function(evt){cont = 0; });
+					$(document).on("click", ".btn_cat", function(evt){cont = 0; });
+					$(document).on("click", ".chat", function(evt){cont = 0; });
+					$(document).on("click", ".logout", function(evt){cont = 1; });
+					
+					var exitApp = false, intval = setInterval(function (){exitApp = false;}, 1000);
+					document.addEventListener("backbutton", function (e){
+						e.preventDefault();
+						if (exitApp) {
+							clearInterval(intval) 
+							(navigator.app && navigator.app.exitApp()) || (device && device.exitApp())
+						}
+						else {
+							exitApp = true
+							//history.back(1);
+							
+							var pagina 	= window.location.href;
+							var tags 	= pagina.split("#");
+							var tag 	= tags[1];
+							
+							console.log(tag);
+							
+							if(tag == "mainpage"){ alerta('Clique 2x seguidas em voltar para fechar o aplicativo!','Atenção','Atenção','OK'); }
+							if(tag == "eventos"){ activate_page("#mainpage"); }
+							if(tag == "produtos_comprados"){ activate_page("#mainpage"); }
+							if(tag == "produtos"){ activate_page("#eventos"); }
+							if(tag == "produtos_detalhado"){ activate_page("#produtos"); }
+							if(tag == "custom"){ activate_page("#produtos_detalhado"); }
+							if(tag == "login"){ activate_page("#custom"); }
+							if(tag == "login2"){ activate_page("#produtos_comprados"); }
+							if(tag == "perfil"){ activate_page("#login"); }
+							if(tag == "perfil2"){ alerta('Clique 2x seguidas em voltar para fechar o aplicativo!','Atenção','Atenção','OK'); }
+							if(tag == "cadastrar_endereco"){ activate_page("#login"); }
+							if(tag == "pagamento"){ activate_page("#endereco"); }
+							if(tag == "pagamento2"){ alerta('Clique 2x seguidas em voltar para fechar o aplicativo!','Atenção','Atenção','OK'); }
+							if(tag == "endereco"){ activate_page("#login"); }
+							if(tag == "finaliza"){ activate_page("#mainpage"); }
+						} 
+					}, false);
+				}, false);			
+		</script>
+		
+		<div class="loader"></div>
+		<div class="error"></div>
+		
+		<div id="aviso_foto" class="foto_menu1 aviso_foto">
+			<div class="fechar_aviso" style="position:relative;top: 20%; background-color:#FFF; -webkit-box-shadow: 0px 0px 4px -1px rgba(0,0,0,1); -moz-box-shadow: 0px 0px 4px -1px rgba(0,0,0,1); box-shadow: 0px 0px 4px -1px rgba(0,0,0,1)">
+				
+				<div style="padding:15px; text-align:center !important;">
+					<ul style="display:inline-table;text-align: center; margin: auto 0px; padding: 0px; overflow: auto;">
+					
+					<li style="float:left; display:inline;"><label onclick="capturePhoto();" for="file-input">
+						<a href="#">
+						<img style="cursor:pointer; border:0;" align="center" width="50%" height="auto" src="images/icons/ico-photo2.png"/>
+						<br>Tirar Foto
+						</a>
+					</label></li>
+					
+					<li style="float:left; display:inline;"><label onclick="getPhoto(pictureSource.PHOTOLIBRARY);" for="file-input">
+						<a href="#">
+						<img style="cursor:pointer; border:0;" align="center" width="50%" height="auto" src="images/icons/ico-clip2.png"/>
+						<br>Buscar Galeria
+						</a>
+					</label></li>
+					
+					</ul>
+					<div style="clear:both;"></div>
+				</div>
+				<p align="center" style="padding:15px;">Os arquivos podem ser do tipo JPG ou PNG. A resolução mínima 200dpi. E a camiseta poderá sofrer divergência nas cores e/ou tamanho após impressão!</p>
+				<a onclick="fecha_aviso_foto();" href="#"><p align="center" style="padding:15px; background:#000000; color:#ffffff;"><span>OK</span></p></a>
+			</div>
+		</div>
+		
+		<div id="aviso" class="aviso hidden">
+			<div class="fechar_aviso" style="position:relative;top: 20%; background-color:#FFF; -webkit-box-shadow: 0px 0px 4px -1px rgba(0,0,0,1); -moz-box-shadow: 0px 0px 4px -1px rgba(0,0,0,1); box-shadow: 0px 0px 4px -1px rgba(0,0,0,1)">
+				<p align="center" style="padding:15px;"><strong><span id="titulo_aviso"></span></strong></p>
+				<p align="center" style="padding:15px;"><span id="frase_aviso"></span></p>
+				<a class="fechar_aviso" onclick="fecha_aviso();" href="#"><p align="center" style="padding:15px; background:#000000; color:#ffffff;"><span id="botao_aviso"></span></p></a>
+			</div>
+		</div>
+				
+		<script type="application/javascript" src="js/connection.js"></script>
+		
+		<script type="application/javascript">
+			$('.loader').show();
+			
+			setTimeout(function(){
+			  $('.loader').hide();
+			}, 10000);
+		</script>
+		        
+		<!-- MAINPAGE -->		
+		<div class="upage" id="mainpage">
+            <div class="upage-outer fixed-header-footer">
+                <div class="upage-content ac0 content-area vertical-col left">
+					<a href="#" class="btn_iniciar"><img class="loading" src="http://igestao.fara1.virtuaserver.com.br/igestao/banners/custom1.png" style="width:100%; height:auto;"></a>
+					<a href="https://www.youtube.com/channel/UCdD7zAY1UPQ-HISRk4OIn4A" target="_blank"><img class="loading" src="http://igestao.fara1.virtuaserver.com.br/igestao/banners/custom2.png" style="width:100%; height:auto;"></a>
+					<a href="#" class="btn_produtos_comprados"><img src="http://igestao.fara1.virtuaserver.com.br/igestao/banners/custom3.png" style="width:100%; height:auto;"></a>
+					<a href="http://www.faraone.com.br" target="_blank"><p align="center"><img class="loading" style="padding:5px 0px 2px 0px;" width="65" align="center" src="images/ICONE_VISTA_PRETA.png"></a>
+					<p style="font-size:18px;"><a href="http://www.faraone.com.br" target="_blank"><p align="center">www.faraone.com.br</a></p>
+				</div>
+            </div>
+        </div>
+		<!-- MAINPAGE -->
+        
+		<!-- EVENTOS -->
+		<div class="upage hidden" id="eventos">
+            <div class="upage-outer fixed-header-footer">
+                
+				<div class="upage-content ac0 content-area vertical-col left">           				
+					
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>Onde quer receber?</h2>
+						<p>selecione onde quer receber seu pedido</p>
+					</div>					
+					
+					<div class="list" style="width:170px; margin:0 auto; margin-top:20px; text-align:center; display:block;">
+						<button class="button button-full button-dark btn_casa circle" style="height: 170px; width: 170px; padding: 10px; margin: 7px;"><span class="circle-text">Receber em <br>Casa</span></button>
+						<button class="button button-full button-dark btn_evento circle" style="height: 170px; width: 170px; padding: 10px; margin:7px;"><span class="circle-text">Retirar na <br>Loja</span></button>
+						<div style="clear:both;"></div>
+					</div>
+					
+					<!--LISTA EVENTOS -->
+					<div class="list btn_evento_lista hidden">
+					  <label class="item item-input item-select">
+						<div class="input-label"> Selecione loja: </div>
+						<select id="slc_eventos"></select>
+					  </label>
+					  <button class="button button-full button-dark btn_evento_confirma">Selecionar</button>
+					</div>
+					<!--LISTA EVENTOS -->
+					
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_mainpage" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- EVENTOS -->
+		
+		<!-- PRODUTOS COMPRADOS -->
+		<div class="upage hidden" id="produtos_comprados">
+            <div class="upage-outer fixed-header-footer">
+                
+				<!--LISTA PRODUTOS -->
+				<div class="upage-content ac0 content-area vertical-col left">
+				
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>Pedidos</h2>
+						<p>confira seus últimos pedidos</p>
+					</div>
+					
+					<div id="lista_produtos_comprados"></div>				
+				</div>
+				<!--LISTA PRODUTOS -->
+                
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_mainpage" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- PRODUTOS COMPRADOS -->
+		
+		<!-- PRODUTOS -->
+		<div class="upage hidden" id="produtos">
+            <div class="upage-outer fixed-header-footer">
+			
+				<!--<div class="item item-avatar">
+					<img src="images/ICONE_VISTA_PRETA.png">
+					<h2>Lista de Produtos</h2>
+					<p>confira os nossos produtos</p>
+				</div>-->
+                
+				<!--LISTA PRODUTOS -->
+				<div class="upage-content ac0 content-area vertical-col left">
+					<div id="lista_produtos"></div>				
+				</div>
+				<!--LISTA PRODUTOS -->
+                
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_eventos" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- PRODUTOS -->
+		
+		<!-- PRODUTOS DETALHADO -->
+		<div class="upage hidden" id="produtos_detalhado">
+            <div class="upage-outer fixed-header-footer">
+                
+				<!--<div class="item item-avatar">
+					<img src="images/ICONE_VISTA_PRETA.png">
+					<h2>Produto Detalhado</h2>
+					<p>veja os detalhes do produto e selecione um tamanho</p>
+				</div>-->				
+				
+				<div class="upage-content ac0 content-area horiz-col left">				
+					<div id="produto_detalhado"></div>
+					<div id="produto_detalhado2"></div>
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_produtos" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- PRODUTOS DETALHADO -->
+		
+		<!-- CUSTOM -->
+		<div class="upage hidden" id="custom">
+            <div class="upage-outer fixed-header-footer">
+                
+				<input type="hidden" id="produto" />
+								
+				<div class="upage-content ac0 content-area vertical-col left">
+					
+					<!-- container -->
+					<div class="container">
+						<section id="typography">
+					
+							<!--	EDITOR-->					
+							<div id="shirtDiv" class="page" style="width: 100% !important; height: 100% !important; margin:0 auto; position:relative; background-color: rgba(0, 0, 0, 0);">						
+								
+								<div id="onSelectedCleared"><img id="tshirtFacing" style="opacity: 0; filter: alpha(opacity=0);" width="100%" height="auto" /></img></div>
+								
+								<div id="drawingArea" style="text-align:center;">			
+									<div id="container1">
+										<canvas id="tcanvas" class="hover" width="842px" height="1192px;" style=" -webkit-user-select: none;"></canvas></div>
+									<div id="container2">
+										<canvas id="backCanvas" class="hover" width="842px" height="1192px;" style=" -webkit-user-select: none;"></canvas></div>
+								</div>
+								
+								<img class="ChineloSob" width="100%" height="auto" style="position:absolute; z-index:2; top:0px; width: 100% !important; height: 100% !important; pointer-events: none;"></img>
+								<img class="ChineloAlca hidden" width="100%" height="auto" style="position:absolute; z-index:3; top:0px; width: 100% !important; height: 100% !important; pointer-events: none;"></img>
+								<img class="LogoTop hidden" width="100%" height="auto" style="position:absolute; z-index:4; top:0px; width: 100% !important; height: 100% !important; pointer-events: none;"></img>
+							
+								<!-- FLIP -->
+								<div id="flip_buttom" class="hidden" style="top:50%; right:3%; position:fixed; width:25%; z-index:5;">
+									<a style="margin-top:5px;" id="flip" data-original-title="Show Front View" title="Show Front View"><img style="cursor:pointer;" align="right" width="30%" height="auto" src="images/icons/ico-vira.png"></a>
+									<br><br>
+								</div>
+								<!-- /FLIP -->								
+								
+							</div>	
+							<!--	/EDITOR-->	
+							<div id="barra_fim" style="background-color:#FFFFFF; width:100%; height:35px;"></div>
+						</section>
+					</div>
+					<!-- /container -->
+															
+					<!-- CLIPS-->
+					<ion-modal-view style="margin-top:0px; top:0px; position: absolute; display:none; z-index:9999999999; background:#FFF;" class="clips modal_screen">
+						<div class="list card">
+						
+						  <div class="item item-avatar">
+							<img src="images/ICONE_VISTA_PRETA.png">
+							<h2>LISTA DE CLIPS</h2>
+							<p>clique para adicionar</p>
+						  </div>
+						  						  
+						  <div class="item item-body" id="lista_clip_dados_cat" style="text-align:center;"></div>
+						  <div class="item item-body" id="lista_clip_dados" style="text-align:center;"></div>
+						 
+						</div>
+					</ion-modal-view>
+					<!-- /CLIPS-->
+					
+					<!-- pattern-->
+					<ion-modal-view style="margin-top:0px; top:0px; position: absolute; display:none; z-index:9999999999; background:#FFF;" class="pattern modal_screen" >
+						<div class="list card">
+							<div class="item item-avatar">
+								<img src="images/ICONE_VISTA_PRETA.png">
+								<h2>Máscara Texto</h2>
+								<p>Selecione para adicionar ao texto</p>
+							</div>
+								
+							<div class="item item-body" id="patterns_clips" style="text-align:center;"></div>
+						</div>
+					</ion-modal-view>
+					<!-- /pattern-->
+										
+					<!-- fontes-->
+					<ion-modal-view style="margin-top:0px; top:0px; position: absolute; display:none; z-index:9999999999; background:#FFF;" class="fonte_det modal_screen">
+						<div class="list card">							
+							<div class="item item-body"> 
+								<div class="item item-avatar">
+									<img src="images/ICONE_VISTA_PRETA.png">
+									<h2>LISTA DE FONTES</h2>
+									<p>clique para selecionar</p>
+								  </div>
+								<div id="lista_fontes" style="text-align:center;"></div>							
+							</div>
+						</div>
+					</ion-modal-view>
+					
+					<!-- efeitos-->
+					<ion-modal-view style="margin-top:0px; top:0px; position: absolute; display:none; z-index:9999999999; background:#FFF;" class="efeitos bar_white modal_screen">
+						<div class="list card bar_white" style="text-align:center;">
+								
+								<div class="cfpp bar_white hidden">
+									<p>Cor do Produto</p>
+									<div id="cores_fundo_backa" style="text-align:center;"></div>
+								</div>
+								
+								<div class="cfp bar_white hidden">
+									<p class="hidden">Cor do Fundo da Área Editável</p>
+									<div id="cores_fundo_canvas" style="text-align:center;"></div>
+								</div>							
+																
+								<div class="ct bar_white hidden">
+									<p class="tiras_title">Cor das Tiras</p>
+									<div id="tiras" style="text-align:center;"></div>
+								</div>
+																
+								<div class="mp bar_white hidden">
+									<p>Máscara do Produto</p>
+									<div id="patternsbg_clips" style="text-align:center;"></div>
+								</div>
+						</div>
+					</ion-modal-view>
+					<!-- /efeitos-->
+										
+					<!-- TEXTO CURVO-->
+					<div class="tcurvo bar_white upperdiv" style="display:none;">
+						<div class="list card">
+							<div class="item item-input-inset">
+							<label class="item-input-wrapper">
+							  <input type="text" id="ctext" placeholder="digite seu texto curvo...">
+							</label>
+							<button class="button button-small" id="add-text2">
+							  <i class="icon ion-compose"></i>
+							</button>
+						    </div>
+							<label class="item item-input item-stacked-label">
+								<span class="input-label">Raio</span>
+								<input style="margin-left:5px; width:70%;" type="range"  min="50" max="200" value="170" id="radius" />
+							</label>
+							<label class="item item-input item-stacked-label">
+								<span class="input-label">Espaçamento</span>
+								<input style="margin-left:5px; width:70%;" type="range"  min="5" max="40" value="0" id="spacing" />
+							</label>
+							<label class="item item-input item-stacked-label">
+							<span class="input-label">Tipo</span>
+								<select class="input-label" name="effect" id="effect" >
+								  <option value="curved">Curvado</option>
+								  <option value="arc">Arco</option>
+								  <option value="STRAIGHT">Reto</option>
+								  <option value="smallToLarge">Grande para Pequeno</option>
+								  <option value="largeToSmallTop">Curvado para Cima</option>
+								  <option value="largeToSmallBottom">Curvado para Baixo</option>
+								  <option value="bulge">Protuberância</option>
+								</select><br>
+							</label>
+							<label class="item item-input item-stacked-label">
+							<span class="input-label">Reverter</span>
+							 <label class="toggle toggle-dark">
+							   <input type="checkbox" name="reverse" id="reverse" class="reverse">
+							   <div class="track">
+								 <div class="handle"></div>
+							   </div>
+							 </label>
+							 </label>
+						</div>
+					</div>
+					<!-- /TEXTO CURVO-->
+
+					<!-- EDITOR TEXTO-->
+					<div class="text_edit_bar bar_white upperdiv" style="display:none; background-color:#FFFFFF;">
+						
+						<div class="list card bar_white" style="margin:10px 0;">
+							  <div class="item item-input-inset">
+								<label class="item-input-wrapper">
+								  <input type="text" id="text-string" placeholder="digite seu texto...">
+								</label>
+								<button class="button button-small" id="add-text">
+								  <i class="icon ion-compose"></i>
+								</button>
+							  </div>
+	
+							<div class="bar_white" style="text-align:center; margin-top:5px;">
+								<ul style="display:inline-table;text-align: center; margin: auto 0px; padding: 0px; overflow: auto;">
+									<li style="float:left; display:table-cell; width: 33%;">
+									<div  style="height:auto; display:inline; margin:5px;  text-align: center !important; background-color:#FFF;">
+										<a href="#" class="btn_lista_fontes">
+											<img width="40%" align="center" src="images/fontes/ico-letras.png" />
+											<br>Fonte
+										</a>
+									</div></li>
+									
+									<li style="float:left; display:table-cell; width: 33%;">
+									<div  style="height:auto; display:inline; margin:5px;  text-align: center !important; background-color:#FFF;">
+										<a href="#" id="text-bold" alt="bold">
+											<img width="40%" align="center" src="images/fontes/ico-negrito.png" />
+											<br>Negrito
+										</a>
+									</div></li>
+									
+									<li style="float:left; display:table-cell; width: 33%;">
+									<div  style="height:auto; display:inline; margin:5px;  text-align: center !important; background-color:#FFF;">
+										<a href="#" id="text-italic" alt="italic">
+											<img width="40%" align="center" src="images/fontes/ico-italico.png" />
+											<br>Itálico
+										</a>
+									</div></li>
+									
+									
+									<li style="float:left; display:table-cell; width: 33%;">
+									<div  style="height:auto; display:inline; margin:5px;  text-align: center !important; background-color:#FFF;">
+										<a href="#" id="btn-cores" class="btn-cores">
+											<img width="40%" align="center" src="images/fontes/ico-cores.png" />
+											<br>Cor
+										</a>
+									</div></li>
+									
+									<li style="float:left; display:table-cell; width: 33%;">
+									<div  style="height:auto; display:inline; margin:5px;  text-align: center !important; background-color:#FFF;">
+										<a href="#" id="btn-pattern">
+											<img width="40%" align="center" src="images/fontes/ico-clip.png" />
+											<br>Pattern
+										</a>
+									</div></li>
+									
+									<li style="float:left; display:table-cell; width: 33%;">
+									<div  style="height:auto; display:inline; margin:5px;  text-align: center !important; background-color:#FFF;">
+										<a href="#" id="btn-tcurvo">
+											<img width="40%" align="center" src="images/fontes/ico-efeitos.png" />
+											<br>Curvo
+										</a>
+									</div>
+									</li>
+							</div>
+							<div style="width:100%; height:15px; background-color:#FFF;"></div>
+						</div>
+					</div>
+					<!-- EDITOR TEXTO-->
+					
+					<!-- EFEITOS TEXTO-->
+					<div class="efeitos_edit bar_white upperdiv" style="display:none; margin-top:5px;">
+						<div>
+							<div class="bar_white" style="text-align:center;">
+							<ul style="display:inline-table;text-align: center; margin: auto 0px; padding: 0px; overflow: auto;">	
+								
+								<li style="float:left; display:table-cell; width: 50%;">
+								<div class="bar_white" style="height:auto; display:inline; text-align:center; background-color:#FFF;">
+									<a href="#" class="btn_cfp">
+										<img width="50%" align="center" src="images/fontes/ico-cores.png" />
+										<br>Cor Produto
+									</a>
+								</div></li>
+								
+								<!--<li style="float:left; display:table-cell; width: 70%;">
+								<div  class="button_tiras_mp bar_white hidden" style="height:auto; display:inline; text-align:center; background-color:#FFF;">
+									<a href="#" class="btn_ct">
+										<img width="70%" align="center" src="images/icons/ico-tirasp.png" />
+										<br>Cor Tiras
+									</a>
+								</div></li>-->
+																
+								<li style="float:left; display:table-cell; width: 50%;">
+								<div  class="bar_white" style="height:auto; display:inline; text-align:center; background-color:#FFF;">
+									<a href="#" class="btn_mp2">
+										<img width="50%" align="center" src="images/icons/ico-pattern.png" />
+										<br>Pattern Fundo
+									</a>
+								</div></li>
+							</ul>	
+							</div>
+						</div>
+					</div>
+					<!-- EFEITOS TEXTO-->
+					
+					<!--FOTO COM GALERIA-->
+					<div style="display:none; margin-top:5px; text-align:center;">
+						<div style=" text-align: center !important;">
+							
+							<div class="image-upload1" style="height:auto; display:inline;  text-align: center !important; background-color:#FFF"></div>
+							
+							<img style="display:none;" id="camera1" src="" />
+							<img style="display:none;" id="camera2" src="" />
+							
+							<img style="display:none;" id="camera3" src="" />
+							<img style="display:none;" id="camera4" src="" />
+							
+							<div class="image-upload2" style="height:auto; display:inline;  text-align: center !important; background-color:#FFF"></div>
+							<br><br>
+						</div>
+						<a class="fechar_aviso" onclick="fecha_aviso_foto();" href="#"><p align="center" style="padding:15px; background:#000000; color:#ffffff;"><span id="botao_aviso"></span></p></a>
+					</div>
+					<!--FOTO COM GALERIA-->
+					
+					<!--FOTO COM GALERIA2-->
+					<div class="foto_menu2 bar_white hidden upperdiv" style="display:none; margin-top:5px; text-align:center;">
+						<div class="bar_white" style="text-align:center;">
+						<ul style="display:inline-table;text-align: center; margin: auto 0px; padding: 0px; overflow: auto;">	
+							<li style="float:left; display:inline;">
+							<div class="image-upload3" style="height:auto; display:inline; text-align:center; background-color:#FFF">
+								<label onclick="capturePhoto2();" for="file-input">
+									<a href="#">
+									<img style="cursor:pointer; border:0;" align="center" width="40%" height="auto" src="images/icons/ico-photo2.png"/>
+									<br>Tirar Foto
+									</a>
+								</label>
+								<input class="button_img" type="file" id="camera3">
+							</div></li>
+							
+							<li style="float:left; display:inline;">
+							<div class="image-upload4" style="height:auto; display:inline; text-align:center; background-color:#FFF">
+								<label onclick="getPhoto2(pictureSource.PHOTOLIBRARY);" for="file-input">
+									<a href="#">
+									<img style="cursor:pointer; border:0;" align="center" width="40%" height="auto" src="images/icons/ico-clip2.png"/>
+									<br>Buscar da galeria
+									</a>
+								</label>
+								<input class="button_img" type="file" id="camera4">
+							</div></li>
+							
+							<br><br>
+						</ul>
+						</div>
+					</div>
+					<!--FOTO COM GALERIA2-->
+					
+					<!--PATTERN-->
+					<div class="pattern_menu bar_white hidden upperdiv" style="display:none; margin-top:5px; text-align:center;">
+						<div class="bar_white" style="text-align:center;">
+														
+							<div style="width:16%; height:auto; display:inline;  text-align: center !important; background-color:#FFF;">
+								<a href="#" class="btn_mp2">
+									<img width="10%" align="center" src="images/icons/ico-clip.png" /><br>Patterns
+								</a>
+							</div>
+							
+						</div>
+					</div>
+					<!--PATTERN-->
+					
+					<!-- FILTROS -->
+					<div class="filtros bar_white upperdiv" style="display:none; width:100%; margin-top:5px; text-align:center;">
+					<ul style="display:inline-table;text-align: center; margin: auto 0px; padding: 0px; overflow: auto;">	
+						<li style="float:left; display:table-cell; width: 25%;">
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="removeEffect">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon00.png" />
+							</a>
+						</div></li>
+						<li style="float:left; display:table-cell; width: 25%;">
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="grayScale">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon01.png" />
+							</a>
+						</div></li>
+						<li style="float:left; display:table-cell; width: 25%;">
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="removeWhite">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon02.png" />
+							</a>
+						</div></li>
+						<li style="float:left; display:table-cell; width: 25%;">
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="invert">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon03.png" />
+							</a>
+						</div></li>
+						<li style="float:left; display:table-cell; width: 25%;">
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="sepia">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon04.png" />
+							</a>
+						</div></li>
+						<li style="float:left; display:table-cell; width: 25%;">						
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="sepia2">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon05.png" />
+							</a>
+						</div></li>
+						<li style="float:left; display:table-cell; width: 25%;">
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="brightness">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon06.png" />
+							</a>
+						</div></li>
+						<li style="float:left; display:table-cell; width: 25%;">
+						<div style="height:auto; display:inline; text-align:center; margin-left:5px; background-color:#FFF;">
+							<a href="#" id="pixelate">
+								<img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/filtros/icon08.png" />
+							</a>
+						</div></li>
+					</ul>
+					</div>
+					<!-- FILTROS -->
+					
+					<!--CORES-->
+					<ion-modal-view style="margin-top:0px; top:0px; position: absolute; display:none; z-index:9999999999; background:#FFF;" class="cores modal_screen">
+						<div class="list card" id="cores_textoX">
+							<div class="item item-body"> 
+							
+								<div class="input-label">
+								  Cores
+								</div>
+							<ul style="display:inline-table;text-align: center; margin: auto 0px; padding: 0px; overflow: auto;">		
+								<li style="float:left; display:table-cell; width: 50%;">
+								<div>
+									<p>Cores do Texto</p>
+									<div id="cores_texto" style="text-align:center;"></div>
+									<div style="clear:both"></div>
+								</div></li>
+														
+								<li style="float:left; display:table-cell; width: 50%;">
+								<div>
+									<p>Cor do Fundo do Texto</p>
+									<div id="cores_fundo" style="text-align:center;"></div>
+									<div style="clear:both"></div>
+								</div></li>
+							</ul>					
+						</div>
+					</div>
+					</ion-modal-view>
+					<!-- /cores-->
+														
+				</div>
+							
+				<!-- TOPO-->
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    
+					<!-- EDITOR GERAL -->
+					<div class="clearfix" id="imageeditor" style="display:none;">
+						<div class="bar_white2 tabs tabs-icon-top">
+						  <a style="font-size:8px; margin-top:5px; text-align: center !important;" id="bring-to-front" title="Frente"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-cima.png"><p style="margin-top:-30px; margin-left:-1px;"><strong>Frente</strong></p></a>
+						  <a style="font-size:8px; margin-top:5px; text-align: center !important;" id="send-to-back" title="Trás"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-baixo.png"><p style="margin-top:-30px; margin-left:1px;"><strong>Baixo</strong></p></a>
+						  <a style="font-size:8px; margin-top:5px; text-align: center !important;" id="menos_edit" title="Menos"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-menos.png"><p style="margin-top:-30px; margin-left:-6px;"><strong>Diminuir</strong></p></a>
+						  <a style="font-size:8px; margin-top:5px; text-align: center !important;" id="mais_edit" title="Mais"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-mais.png"><p style="margin-top:-30px; margin-left:-4px;"><strong>Aumentar</strong></p></a>
+						  <!--<a style="margin-top:5px;" id="menos_rotate_edit" title="Menos"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-menos_rotate.png"></a>
+						  <a style="margin-top:5px;" id="mais_rotate_edit" title="Mais"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-mais_rotate.png"></a>-->
+						  <a style="font-size:8px; margin-top:5px; text-align: center !important;" id="flip_edit" title="Flip" data-original-title="Show Back View"><img style="cursor:pointer; z-index:9999999999;" align="center" width="50%" height="auto" src="images/icons/ico-flip.png"><p style="margin-top:-30px; margin-left:0px;"><strong>Virar</strong></p></a>
+						  <a style="font-size:8px; margin-top:5px; text-align: center !important;" id="clone" title="Clone"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-vezes.png"><p style="margin-top:-30px; margin-left:-4px;"><strong>Duplicar</strong></p></a>
+						  <a style="font-size:8px; margin-top:5px; text-align: center !important;" id="remove-selected" title="Deletar"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-lixo.png"><p style="margin-top:-30px; margin-left:-2px;"><strong>Excluir</strong></p></a>
+						</div>
+					</div>
+					<!-- EDITOR GERAL -->
+															
+					<div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_sacola_css btn_voltar_produtos_detalhado" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_voltar_css btn-close-clips-voltar" data-uib="ionic/button" data-ver="0"></button>
+					</div>			
+					                   
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="hidden button btn_fechar_css btn-close-fotos" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-clips" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-cores" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-cores-fundo" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-efeitos" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-tcurvo" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-fontes" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-pattern" data-uib="ionic/button" data-ver="0"></button>
+						<button class="hidden button btn_fechar_css btn-close-patternbg" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                </ion-header-bar>
+				<!-- TOPO-->
+											
+				<!-- BARRA RODAPÉ-->
+				<div class="bar_rodape" style="position: absolute; bottom: 0px; width: 100%; height: auto; background-color:#FFFFFF;">
+					<ul style="text-align:center;">
+					  <li style="width:20%; float:left; padding:5px; font-size:10px; font-weight: normal; text-align: center !important;"><a class="btn-clip-edit"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-clip.png"><br> Imagens</a></li>
+					  <li style="width:20%; float:left; padding:5px; font-size:10px; font-weight: normal; text-align: center !important;"><a class="text-edit"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-text.png"><br> Texto</a></li>
+					  <li style="cursor:pointer; width:20%; float:left; padding:4px; font-size:10px; font-weight: normal; text-align: center !important;">
+					  <a class="btn_fotocam1"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-photo.png"><br> Fotos</a>
+					  </li>
+					  <li style="width:20%; float:left; padding:5px; font-size:10px; font-weight: normal; text-align: center !important;"><a class="btn-filtros"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-filter.png"><br> Filtros</a></li>
+					  <li style="width:20%; float:left; padding:5px; font-size:10px; font-weight: normal; text-align: center !important;"><a class="btn-efeitos"><img style="cursor:pointer;" align="center" width="50%" height="auto" src="images/icons/ico-effect.png"><br> Efeitos</a></li>
+					</ul>
+					<div class="clear:both;"></div>
+					<div>
+						<button style="width:100%; height:45px; background-color:#FFF; border:1px solid #CCC;" class="btn_confirma">Comprar</button>
+					</div>
+				</div>					
+				<!-- /BARRA RODAPÉ-->
+				
+            </div>
+        </div>
+		<!-- CUSTOM -->
+		
+		<!-- LOGIN -->
+		<div class="upage hidden" id="login">
+            <div class="upage-outer fixed-header-footer">
+                				
+				<div class="upage-content ac0 content-area vertical-col left">
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>Login</h2>
+						<p>faça login para continuar</p>
+					</div>			
+				
+					<div class="list">
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">E-mail</span>
+						<input type="email" id="login-email" placeholder="E-mail">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Senha</span>
+						<input type="password" id="login-senha" placeholder="Senha">
+					  </label>
+					  
+					  <div class="row">
+						<div class="col col-50"><button class="button button-full button-dark btn_login">Login</button></div>
+						<div class="col col-50"><button class="button button-full button-dark btn_esqueci">Esqueci a Senha?</button></div>
+					  </div>
+					  <br>
+					  <button class="button button-full button-dark btn_cadastro">Cadastre-se</button>
+					</div>	
+				
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_canvas" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /LOGIN -->
+		
+		<!-- LOGIN2 -->
+		<div class="upage hidden" id="login2">
+            <div class="upage-outer fixed-header-footer">
+                				
+				<div class="upage-content ac0 content-area vertical-col left">
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>Login</h2>
+						<p>faça login para continuar</p>
+					</div>			
+				
+					<div class="list">
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">E-mail</span>
+						<input type="email" id="login-email2" placeholder="E-mail">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Senha</span>
+						<input type="password" id="login-senha2" placeholder="Senha">
+					  </label>
+					  
+					  <div class="row">
+						<div class="col col-50"><button class="button button-full button-dark btn_login2">Login</button></div>
+						<div class="col col-50"><button class="button button-full button-dark btn_esqueci2">Esqueci a Senha?</button></div>
+					  </div>
+					  <br>
+					  <button class="button button-full button-dark btn_cadastro2">Cadastre-se</button>
+					</div>	
+				
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_comprados" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /LOGIN2 -->
+			
+		<!-- PERFIL -->
+		<div class="upage hidden" id="perfil">
+            <div class="upage-outer fixed-header-footer">
+                
+				<div class="upage-content ac0 content-area vertical-col left">
+					
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>CADASTRE-SE</h2>
+						<p>preencha o formulário para se cadastrar-se</p>
+					</div>
+					
+					<div id="perfil_listar" class="list">
+			
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Nome</span>
+						<input type="text" id="lNome" placeholder="Nome">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">CPF</span>
+						<input type="tel" id="lCPF" maxlength="11" alt="cpf" placeholder="CPF">
+					  </label>
+					  <div style="width:30%; float: left;">
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">DDD</span>
+						<input type="tel" id="lDDD" maxlength="2" placeholder="DDD">
+					  </label>
+					  </div>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Telefone ou Celular com DDD sem Zero</span>
+						<input type="tel" id="lTel" maxlength="10" ui-mask="(99) 9999-9999" placeholder="Exemplo (34) 9999-8888 Telefone ou Celular">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Email</span>
+						<input type="email" id="lEmail" placeholder="Email">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Senha</span>
+						<input type="password" id="lSenha" placeholder="Senha">
+					  </label>
+					  </hr>
+					  <button class="button button-full button-dark btn_cadastrar">Criar Conta</button>
+					</div>								
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn-login" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /PERFIL -->
+		
+		<!-- PERFIL2 -->
+		<div class="upage hidden" id="perfil2">
+            <div class="upage-outer fixed-header-footer">
+                
+				<div class="upage-content ac0 content-area vertical-col left">
+					
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>CADASTRE-SE</h2>
+						<p>preencha o formulário para se cadastrar-se</p>
+					</div>
+					
+					<div class="list">
+			
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Nome</span>
+						<input type="text" class="lNome" placeholder="Nome">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">CPF</span>
+						<input type="tel" class="lCPF" maxlength="11" alt="cpf" placeholder="CPF">
+					  </label>
+					  <div style="width:30%; float: left;">
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">DDD</span>
+						<input type="tel" class="lDDD" maxlength="2" placeholder="DDD">
+					  </label>
+					  </div>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Telefone ou Celular com DDD sem Zero</span>
+						<input type="tel" class="lTel" maxlength="10" ui-mask="(99) 9999-9999" placeholder="Exemplo (34) 9999-8888 Telefone ou Celular">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Email</span>
+						<input type="email" class="lEmail" placeholder="Email">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Senha</span>
+						<input type="password" class="lSenha" placeholder="Senha">
+					  </label>
+					  </hr>
+					  <button class="button button-full button-dark btn_cadastrar2">Criar Conta</button>
+					</div>								
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn-login2" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /PERFIL2 -->
+		
+		<!-- PERFIL ENDEREÇO -->
+		<div class="upage hidden" id="cadastrar_endereco">
+            <div class="upage-outer fixed-header-footer">
+                
+				<div class="upage-content ac0 content-area vertical-col left">
+					
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>CADASTRO DE ENDEREÇO</h2>
+						<p>preencha o endereço de entrega</p>
+					</div>
+					
+					<div class="list">
+			
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">CEP</span>
+						<input type="tel" id="lCep" maxlength="8" placeholder="CEP" onblur="getEndereco()">
+					  </label>
+					  <div style="width:70%; float:left;">
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Endereço</span>
+						<input type="text" id="lEndereco" placeholder="Endereço">
+					  </label>
+					  </div>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Número</span>
+						<input type="tel" id="lNumero" placeholder="Número">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Bairro</span>
+						<input type="text" id="lBairro" placeholder="Bairro">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Complemento</span>
+						<input type="text" id="lComplemento" placeholder="Complemento">
+					  </label>
+					  <div style="width:30%; float:left;">
+						  <label class="item item-input item-stacked-label">
+							<span class="input-label">Estado</span>
+							<input type="text" id="lEstado" placeholder="Estado">
+						  </label>
+					  </div>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Cidade</span>
+						<input type="text" id="lCidade" placeholder="Cidade">
+					  </label>
+					  </hr>
+					  <button class="button button-full button-dark btn_cadastrar_endereco">Cadastrar</button>
+					</div>								
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_login" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /PERFIL ENDEREÇO -->
+		
+		<!-- CARTAO -->
+		<div class="upage hidden" id="pagamento">
+            <div class="upage-outer fixed-header-footer">
+                
+				<div class="upage-content ac0 content-area vertical-col left">
+					
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>PAGAMENTO</h2>
+						<p>preencha o formulário para pagamento</p>
+					</div>
+					
+					<div class="row">
+						<div class="col col-70">
+							<label for="cupom" class="item item-input item-stacked-label">
+								<span class="input-label">Cupom de Desconto</span>
+								<input id="cupom" name="cupom" type="text"/>
+							</label>
+						</div>
+						<div class="col col-30"><button class="button button-full button-dark validar_cupom">Validar</button></div>
+					</div>
+					
+					<div class="row">
+						<div class="col col-50"><button class="button button-full button-dark tipo_pg_set1" style="font-size:12px;">CARTÃO DE CRÉDITO</button></div>
+						<div class="col col-50"><button class="button button-full button-dark tipo_pg_set2">BOLETO</button></div>
+					</div>
+					
+					<div id="tipo_cartao_banco_select" class="list credit_card hidden">
+					<form id="pay" name="pay" >
+						<fieldset>
+							<ul>
+								<li>
+									<label for="email" class="item item-input item-stacked-label">
+									<span class="input-label">E-mail</span>
+									<input id="email" name="email" type="email" placeholder="digite seu email"/>
+									</label>
+								</li>
+								<li>
+									<label for="cardNumber" class="item item-input item-stacked-label">
+									<span class="input-label">Número do cartão de crédito</span>
+									<input type="text" id="cardNumber" data-checkout="cardNumber" placeholder="Número do Cartão"  onselectstart="return false" onCopy="return false" onCut="return false" onDrag="return false" autocomplete=off />
+									<span id="bandeira"></span>
+									</label>
+								</li>
+								<li>
+									<label for="securityCode" class="item item-input item-stacked-label">
+									<span class="input-label">Dígito verificador de segurança</span>
+									<input type="text" id="securityCode" data-checkout="securityCode" placeholder="Código de Segurança atrás do cartão" onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off />
+									</label>
+								</li>
+								<li style="width:50%; float: left;">
+									<label for="cardExpirationMonth" class="item item-input item-stacked-label">
+									<span class="input-label">Mês de expiração</span>
+									<input type="text" maxlength="2" id="cardExpirationMonth" data-checkout="cardExpirationMonth" placeholder="Mês " onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off />
+									</label>
+								</li>
+								<li>
+									<label for="cardExpirationYear" class="item item-input item-stacked-label">
+									<span class="input-label">Ano de expiração</span>
+									<input type="text" maxlength="4" id="cardExpirationYear" data-checkout="cardExpirationYear" placeholder="Ano de Expiração completo, exemplo: 2020" onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off />
+									</label>
+								</li>
+								<li>
+									<label for="cardholderName" class="item item-input item-stacked-label">
+									<span class="input-label">Nome do portador do cartão</span>
+									<input type="text" id="cardholderName" data-checkout="cardholderName" placeholder="Nome do portador do cartão" />
+									</label>
+								</li>
+								<input data-checkout="docType" type="hidden" value="CPF"/>
+								<input data-checkout="siteId" type="hidden" value="MLB"/>
+								<li>
+									<label for="docNumber" class="item item-input item-stacked-label">
+									<span class="input-label">CPF</span>
+									<input type="text" id="docNumber" data-checkout="docNumber" placeholder="CPF apenas números" />
+									</label>
+								</li>
+								<li style="display:none;">
+								  <label style="display:none;" for="installments" class="item item-input item-stacked-label">Parcelas:</label>
+								  <select style="display:none;" id="installments" name="installmentsOption"></select>
+								</li>
+							</ul>
+							<input type="hidden" name="amount" id="amount" />
+							<p align="center"><input class="button button-full button-dark" type="submit" value="Efetuar Pagamento Cartão" id="go" /></p>
+						</fieldset>
+					</form>
+				</div>
+				
+				<div id="tipo_boleto_select" class="list bankship hidden">
+					<p align="center"><input id="btn_fim" class="button button-full button-dark" type="submit" value="Efetuar Pagamento Boleto" /></p>
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_login" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /CARTAO -->
+		
+		<!-- CARTAO2 -->
+		<div class="upage hidden" id="pagamento2">
+            <div class="upage-outer fixed-header-footer">
+                
+				<div class="upage-content ac0 content-area vertical-col left">
+					
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>PAGAMENTO</h2>
+						<p>preencha o formulário para pagamento</p>
+					</div>
+					
+					<div class="list">
+						<label class="item item-input item-select">
+							<div class="input-label">Forma de Pag.: </div>
+							<select id="tipo_cartao2" class="item item-input">
+								<option value="0" selected>Selecione</option>
+								<option value="1" >Cartão de Crédito</option>
+								<option value="2" >Boleto</option>
+							</select>
+						</label>
+					</div>
+					
+					<div id="tipo_cartao_banco_select2" class="list credit_card hidden">
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Nome Proprietário Cartão</span>
+						<input type="text" id="lNnome2" placeholder="Nome Proprietário Cartão">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Data Nascimento Proprietário Cartão</span>
+						<input type="date" id="lDataNasc2" maxlength="10" placeholder="dd/mm/YYYY data de nascimento completa">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Número Cartão <span class="bandeira"></span></span>
+						<input type="tel" id="lNcartao2" data-checkout="lNcartao2" maxlength="16" placeholder="Número Cartão">
+						<div id="bandeira"></div>
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Mes Vencimento</span>
+						<input type="tel" id="lMesVenc2" alt="data" maxlength="2" placeholder="Mes Vencimento (mm)">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Ano Vencimento</span>
+						<input type="tel" id="lAnoVenc2" alt="data" maxlength="4" placeholder="Ano Vencimento (aaaa)">
+					  </label>
+					  <label class="item item-input item-stacked-label">
+						<span class="input-label">Código Segurança</span>
+						<input type="tel" id="lCodigoSeg2" placeholder="Código Segurança">
+					  </label>
+					</div>	
+					</hr>
+					<button class="button button-full button-dark btn_fim2">Efetuar Pagamento</button>
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_comprados" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /CARTAO2 -->
+		
+		<!-- CONFIRMA -->
+		<div class="upage hidden" id="confirma">
+            <div class="upage-outer fixed-header-footer">
+                				
+				<div class="upage-content ac0 content-area vertical-col left">
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>Confirmação de Venda</h2>
+						<p>veja o número de sua venda</p>
+					</div>	
+
+					<div id="endereco_confirma" style="padding:5px; font-size:10px;"></div>
+					<div id="tamanho_confirma" style="padding:5px; font-size:10px;"></div>
+					<div id="valor_confirma" style="padding:5px; font-size:10px;"></div>
+				
+					<div>
+					  
+					  <canvas id="queImg" class="hidden" width="842px" height="1192px"></canvas>
+					  <canvas id="queImgb" class="hidden" width="842px" height="1192px"></canvas>
+					  
+					  <div class="result">
+						<div id="shirtDiv2" class="page" style="width:100%; height:auto; margin:0 auto; position:relative; background-color: rgba(0, 0, 0, 0);">						
+							
+							<canvas id="queImg2"></canvas>
+							<img class="ChineloSobb" width="100%" height="auto" style="position:absolute; z-index:2; top:0px; pointer-events: none;"></img>
+							<img class="ChineloAlca hidden" width="100%" height="auto" style="position:absolute; z-index:3; top:0px; pointer-events: none;"></img>
+						</div>
+					  </div>
+					  					  
+					  <div class="result">
+						<div id="shirtDivb2 hidden" class="page" style="width:100%; height:auto; margin:0 auto; position:relative; background-color: rgba(0, 0, 0, 0);">						
+							
+							<canvas id="queImgb2"></canvas>
+							<img class="ChineloSob2 hidden" width="100%" height="auto" style="position:absolute; z-index:2; top:0px; pointer-events: none;"></img>
+							<img class="ChineloAlca hidden" width="100%" height="auto" style="position:absolute; z-index:3; top:0px; pointer-events: none;"></img>
+						</div>
+					   </div>
+						
+					</div>
+						
+					<div><button class="button button-full button-dark btn_fim">Confirmar</button></div>
+					</div>
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_canvas" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /CONFIRMA -->
+		
+		<!-- ENDERECO DE ENTREGA -->
+		<div class="upage hidden" id="endereco">
+            <div class="upage-outer fixed-header-footer">
+                				
+				<div class="upage-content ac0 content-area vertical-col left">
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>SELECIONE O ENDEREÇO DE ENTREGA</h2>
+						<p>selecione ou cadastre um novo endereço</p>
+					</div>			
+				
+					<div class="list" style="padding:20px;">
+						<ion-list radio-group>
+
+						  <ion-list-header>
+							Endereços de Entrega
+						  </ion-list-header>
+						  
+						  <div id="enderecos_listar"></div>
+
+						</ion-list>
+					</div>
+					
+					<div class="row">
+						<div class="col col-50"><button class="button button-full button-dark tipo_entrega_set1" style="font-size:12px;">PAC</button></div>
+						<div class="col col-50"><button class="button button-full button-dark tipo_entrega_set2">SEDEX</button></div>
+					</div>
+					
+					<div class="row">
+						<div class="col col-50">
+							<button class="button button-full button-dark btn-cadastrar_endereco">Cadastrar</button>
+						</div>
+						<div class="col col-50">
+							<button class="button button-full button-dark btn_pagamento">Confirma</button>
+						</div>
+					  </div>					
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_canvas" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /ENDERECO DE ENTREGA -->
+		
+		<!-- sem net -->
+		<div class="upage hidden" id="semnet">
+            <div class="upage-outer fixed-header-footer">
+                				
+				<div class="upage-content ac0 content-area vertical-col left">
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>SEM ACESSO A INTERNET</h2>
+						<p>confira sua conexão</p>
+					</div>			
+				
+					<div class="list">
+					  <label class="item item-input item-stacked-label">
+						<img src="images/wifi.png" width="100%" height="auto" /></img>
+					  </label>
+					</div>						
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col">
+						<button class="button btn_voltar_css btn_voltar_mainpage" data-uib="ionic/button" data-ver="0"></button>
+					</div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /sem net -->
+		
+		<!-- FINALIZA -->
+		<div class="upage hidden" id="finaliza">
+            <div class="upage-outer fixed-header-footer">
+                				
+				<div class="upage-content ac0 content-area vertical-col left">
+					<div class="item item-avatar">
+						<img src="images/ICONE_VISTA_PRETA.png">
+						<h2>Finalizado com Sucesso!</h2>
+						<p>veja o número de sua venda</p>
+					</div>						
+				
+					<div class="list">
+						<label class="item item-input item-stacked-label">
+							<p>Exiba este número para <br> resgatar seu produto:</p>
+							<p style="padding:20px; font-size:32px; color:#333; text-align:center;" id="auto"></p>
+							<p style="padding:20px; font-size:48px; color:#471; text-align:center;"><i class="far fa-check"></i></p>
+							<p style="padding:20px; font-size:22px; color:#471; text-align:center;">SUCESSO!</p>
+						</label>
+						<p style="padding:20px; font-size:18px; color:#333; text-align:center;"><span id="link_boleto"></span></p>
+						<p style="padding:20px; font-size:12px; color:#333; text-align:left;" class="dados_compra"></p>
+					  
+						  
+					  <div id="dados_compra"></div>
+					  
+					  <button class="button button-full button-dark btn_finaliza">Finalizar</button>
+					</div>						
+				</div>
+				
+				<ion-header-bar class="bar inner-element uib_w_2 bar-light bar-header" data-uib="ionic/header" data-ver="0" align-title="center">
+                    <div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                    
+					<p class="title" ><img style="padding-top:5px;" width="95" align="center" src="images/LOGO_VISTA_PRETA.png"></p>
+                    
+					<div class="buttons widget-container content-area horiz-area wrapping-col"></div>
+                </ion-header-bar>
+				
+            </div>
+        </div>
+		<!-- /FINALIZA -->
+		
+		<!-- FALA QUE AS FONTES EXISTEM -->
+		<div id="div_fonts"></div>
+		<input type="hidden" id="cor_fundo_canvas_save">
+		<input type="hidden" id="cor_produto">
+		<input type="hidden" id="brandcard">
+		<input type="hidden" id="cvvSize">
+		<input type="hidden" id="tokencard">
+		<input type="hidden" id="tira">
+		<input type="hidden" id="auto_venda">
+		<input type="hidden" id="hash">
+		<input type="hidden" id="session">
+		<input type="hidden" id="a">
+		<input type="hidden" id="b">
+		<input type="hidden" id="w">
+		<input type="hidden" id="h">
+		<input type="hidden" id="cod_pagseguro">
+		<input type="hidden" id="link_pagseguro">
+		<input type="hidden" id="tipo_cartao">
+		<input type="hidden" id="tipo_frete">
+		
+		<input type="hidden" id="rauto">
+		<input type="hidden" id="rid_evento">
+		<input type="hidden" id="rid_produto">
+		<input type="hidden" id="rid_endereco">
+		<input type="hidden" id="rtotal">
+		<input type="hidden" id="rfrete">
+		<input type="hidden" id="vcupom">
+		<input type="hidden" id="ncupom">
+		
+		<input type="hidden" id="token_id">
+		
+		<input type="hidden" id="paymentMethodId">
+		
+		<canvas id='blank' style='display:none'></canvas>
+    </body>
+
+</html>
+<script type="text/javascript" src="js/mercadopago.js"></script>
