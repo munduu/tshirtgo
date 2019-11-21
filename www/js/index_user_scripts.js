@@ -1,5 +1,5 @@
-var url_geral = "https://igestao.fara1.virtuaserver.com.br/igestao/php/";
-var url_geral2= "https://igestao.fara1.virtuaserver.com.br/igestao/";
+var url_geral = "https://igestaoweb.com.br/tshirtgo/php/";
+var url_geral2= "https://igestaoweb.com.br/tshirtgo/";
 
 function alerta(mensagem,titulo1,titulo2,botao){
 	$('#aviso').show();
