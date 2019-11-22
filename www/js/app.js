@@ -1,4 +1,4 @@
-var url_geral = "https://web.com.br/tshirtgo/php/";
+var url_geral = "https://igestaoweb.com.br/tshirtgo/php/";
 var url_geral2= "https://igestaoweb.com.br/tshirtgo/";
 var token     = "H424715433852";
 
